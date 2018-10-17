@@ -4,8 +4,8 @@ import { Route } from 'mirrorx'
 // 导入节点
 
 import {
-    ConnectedZhubiaotestPaginationTable,
-    ConnectedZhubiaotestEdit,
+    ConnectedDemo_tablePaginationTable,
+    ConnectedDemo_tableEdit,
 } from '../../container'
 
 
@@ -22,10 +22,10 @@ export default ({ match }) => (
     <div className="templates-route">
 
         {/*配置根路由记载节点*/}
-        {<Route exact path={'/'} component={ConnectedZhubiaotestPaginationTable} />}
+        {<Route exact path={'/'} component={ConnectedDemo_tablePaginationTable} />}
 
         {/*配置节点路由*/}
-        <Route  path={`${match.url}Zhubiaotest-table`} component={ConnectedZhubiaotestPaginationTable} />
-        <Route  path={`${match.url}Zhubiaotest-edit`} component={ConnectedZhubiaotestEdit} />
+        <Route  path={`${match.url}Demo_table-table`} component={ConnectedDemo_tablePaginationTable} />
+        <Route  path={`${match.url}Demo_table-edit`} component={ConnectedDemo_tableEdit} />
     </div>
 )

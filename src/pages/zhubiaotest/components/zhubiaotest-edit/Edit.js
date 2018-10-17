@@ -190,7 +190,8 @@ class Edit extends Component {
                 childListzibiaotest,
                 cacheArrayzibiaotest01,
                 delArrayzibiaotest01,
-                childListzibiaotest01
+                childListzibiaotest01,
+                grandSonData,
                 
         } = this.props;
 
@@ -198,12 +199,13 @@ class Edit extends Component {
                 cacheArrayzibiaotest,
                 delArrayzibiaotest,
                 childListzibiaotest,
+                grandSonData,
         }
 
         let childObj2 = {
             cacheArrayzibiaotest01,
             delArrayzibiaotest01,
-            childListzibiaotest01
+            childListzibiaotest01,
         }
 
         let title = this.onChangeHead(btnFlag);
@@ -277,12 +279,12 @@ class Edit extends Component {
                             </div>
                         </div>
                         <ChildTablezibiaotest btnFlag={btnFlag} {...childObj}/>
-                        <div className="master-tag">
+                        {/* <div className="master-tag">
                             <div className="childhead">
                                 <span className="workbreakdown" >子表2</span>
                             </div>
                         </div>
-                        <ChildTablezibiaotestSecond btnFlag={btnFlag} {...childObj2}/>
+                        <ChildTablezibiaotestSecond btnFlag={btnFlag} {...childObj2}/> */}
 
             </div>
         )

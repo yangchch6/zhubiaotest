@@ -17,8 +17,7 @@ import {
     Label, 
     Message, 
     Radio,
-    Pagination,
-    FormGroup
+    Pagination
 } from "tinper-bee";
 
 import Select from 'bee-select';
@@ -42,9 +41,6 @@ class ChildTable extends Component {
         this.state = { 
             selectData:[],
             editFlag:true,
-            showModal: false,
-            pk_zhubiao:"",
-            age:""
             
         };
         let {btnFlag} = this.props;
@@ -53,9 +49,9 @@ class ChildTable extends Component {
         
         this.column = [
             {
-                title: "pk_zhubiao",
-                dataIndex: "pkZhubiao",
-                key: "pkZhubiao",
+                title: "code",
+                dataIndex: "code",
+                key: "code",
                 width: 150,
                 render: (text, record, index) => this.
                 renderColumns
@@ -64,12 +60,12 @@ class ChildTable extends Component {
                 
                 
                 
-                (text, record, index, "pkZhubiao",this.editFlag)
+                (text, record, index, "code",this.editFlag)
             },
             {
-                title: "age",
-                dataIndex: "age",
-                key: "age",
+                title: "name",
+                dataIndex: "name",
+                key: "name",
                 width: 150,
                 render: (text, record, index) => this.
                 renderColumns
@@ -78,7 +74,7 @@ class ChildTable extends Component {
                 
                 
                 
-                (text, record, index, "age",this.editFlag)
+                (text, record, index, "name",this.editFlag)
             },
             {
                 title: "操作",
@@ -130,12 +126,12 @@ class ChildTable extends Component {
     )
 
     handleChange = (value, index, column)=>{
-        const newData = [...this.props.childListzibiaotest01];
+        const newData = [...this.props.childListdemo_child2];
         const target = newData.filter((item,newDataIndex) => index === newDataIndex)[0];
         // debugger
         if (target) {
             target[column] = value;
-            actions.zhubiaotest.updateState({
+            actions.demo_table.updateState({
                 list: newData
             });
         }
@@ -170,11 +166,11 @@ class ChildTable extends Component {
     );
 
     handleChangeNumber = (value, index, column)=>{
-        const newData = [...this.props.childListzibiaotest01];
+        const newData = [...this.props.childListdemo_child2];
         const target = newData.filter((item,newDataIndex) => index === newDataIndex)[0];
         if (target) {
             target[column] = parseInt(value);
-            actions.zhubiaotest.updateState({
+            actions.demo_table.updateState({
                 list: newData
             });
         }
@@ -208,11 +204,11 @@ class ChildTable extends Component {
     );
 
     handleChangeFloat = (value, index, column)=>{
-        const newData = [...this.props.childListzibiaotest01];
+        const newData = [...this.props.childListdemo_child2];
         const target = newData.filter((item,newDataIndex) => index === newDataIndex)[0];
         if (target) {
             target[column] = value;
-            actions.zhubiaotest.updateState({
+            actions.demo_table.updateState({
                 list: newData
             });
         }
@@ -249,12 +245,12 @@ class ChildTable extends Component {
 
     handleChangeDate = (value, index, column)=> {
         // console.log("date",value.toISOString());
-        const newData = [...this.props.childListzibiaotest01];
+        const newData = [...this.props.childListdemo_child2];
         const target = newData.filter((item,newDataIndex) => index === newDataIndex)[0];
         if (target) {
             target[column] = value.format(format);
             // console.log("newData date",newData)
-            actions.zhubiaotest.updateState({
+            actions.demo_table.updateState({
                 list: newData
             });
         }
@@ -289,74 +285,32 @@ class ChildTable extends Component {
     )
 
     handleTableSelect = (value, index, column)=> {
-        const newData = [...this.props.childListzibiaotest01];
+        const newData = [...this.props.childListdemo_child2];
         const target = newData.filter((item,newDataIndex) => index === newDataIndex)[0];
         if (target) {
             console.log("select data",value);
             target[column] = value;
-            actions.zhubiaotest.updateState({
+            actions.demo_table.updateState({
                 list: newData
             });
         }
     }
-    
-    // 增加空行(在表格中编辑)
-    onAddEmptyRowTable = ()=>{
-        let tempArray = [...this.props.childListzibiaotest01],
+
+    // 增加空行
+    onAddEmptyRow = ()=>{
+        let tempArray = [...this.props.childListdemo_child2],
             emptyRow = {
-                        pkZhubiao:'',
-                        age:'',
+                        code:'',
+                        name:'',
             };
             // UUID用于表示新增数据，在保存数据时需要删掉uuid字段
             // let uuid = this.guid();
             let uuid = setTimeout(function(){},1);
             emptyRow['uuid'] = uuid;
             tempArray.push(emptyRow);
-            actions.zhubiaotest.updateState({childListzibiaotest01:tempArray})
+            actions.demo_table.updateState({childListdemo_child2:tempArray})
     }
 
-    // 增加空行(在模态框中编辑)
-    onAddEmptyRowModal = ()=>{
-        this.setState({showModal : true})
-    }
-
-    // 模态框点击取消按钮
-    close() {
-        this.setState({
-            showModal: false
-        });
-    }
-
-    // 模态框点击确认按钮
-    saveToTable(){
-        let { pk_zhubiao, age } = this.state;
-        this.setState({ 
-            showModal: false 
-        });
-        let tempArray = [...this.props.childListzibiaotest01],
-        emptyRow = {
-                    pkZhubiao:pk_zhubiao,
-                    age:age,
-        };
-        // UUID用于表示新增数据，在保存数据时需要删掉uuid字段
-        // let uuid = this.guid();
-        let uuid = setTimeout(function(){},1);
-        emptyRow['uuid'] = uuid;
-        tempArray.push(emptyRow);
-        actions.zhubiaotest.updateState({childListzibiaotest01:tempArray})
-        this.setState({
-            pk_zhubiao:"", 
-            age:""
-        })
-    }
-
-    // 模态框值更改事件
-    handleModalChange = (state) => (value) => {
-        this.setState({
-            [state]: value
-        })
-    }
-    
     // 产生uuid备用
     guid = ()=>{
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -369,11 +323,11 @@ class ChildTable extends Component {
     onChildDel = async (record, index)=>{
 
         console.log("行删除",record,index);
-        let childList = this.deepClone("childListzibiaotest01"),
-            cacheArray = this.deepClone("cacheArrayzibiaotest01"),
+        let childList = this.deepClone("childListdemo_child2"),
+            cacheArray = this.deepClone("cacheArraydemo_child2"),
             id = record['id'],
             uuid = record['uuid'],
-            delArray = this.deepClone('delArrayzibiaotest01');
+            delArray = this.deepClone('delArraydemo_child2');
         
         let childLen = childList.length,
             cacheLen = cacheArray.length;
@@ -398,13 +352,13 @@ class ChildTable extends Component {
         }
         
 
-        console.log("this.props.childListzibiaotest01",this.props.childListzibiaotest01);
+        console.log("this.props.childListdemo_child2",this.props.childListdemo_child2);
         console.log("删除后",childList,cacheArray)
         
-        await actions.zhubiaotest.updateState({
-            childListzibiaotest01:childList,
-            cacheArrayzibiaotest01:cacheArray,
-            delArrayzibiaotest01:delArray
+        await actions.demo_table.updateState({
+            childListdemo_child2:childList,
+            cacheArraydemo_child2:cacheArray,
+            delArraydemo_child2:delArray
         })
 
     }
@@ -419,14 +373,11 @@ class ChildTable extends Component {
     }
 
     render() {
-        let childList = [...this.props.childListzibiaotest01];
+        let childList = [...this.props.childListdemo_child2];
         return (
             <div className="child-table">
                 <div className="chidtable-operate-btn">
-                    {this.editFlag ? <Button size='sm' colors="primary" onClick={this.onAddEmptyRowTable}>增行(表编辑)</Button> :"" }
-                </div>
-                <div className="chidtable-operate-btn">
-                    {this.editFlag ? <Button size='sm' colors="primary" onClick={this.onAddEmptyRowModal}>增行(弹框)</Button> :"" }
+                    {this.editFlag ? <Button size='sm' colors="primary" onClick={this.onAddEmptyRow}>增行</Button> :"" }
                 </div>
                 <Row className='table-list'>
                     <Col md={12}>
@@ -441,45 +392,6 @@ class ChildTable extends Component {
                         />
                     </Col>
                 </Row>
-                <Modal
-                    show={this.state.showModal}
-                    onHide={this.close}
-                    style={{width: 450}}
-                >
-                    <Modal.Header className="text-center">
-                        <Modal.Title>增行</Modal.Title>
-                    </Modal.Header>
-
-                    <Modal.Body>
-                        <div style={{ width: 300, margin: '0 auto' }}>
-                            <FormGroup>
-                                <Label>pk_zhubiao</Label>
-                                <FormControl
-                                    value={this.state.pk_zhubiao}
-                                    onChange={this.handleModalChange('pk_zhubiao')}
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label>age</Label>
-                                <FormControl
-                                    value={this.state.age}
-                                    onChange={this.handleModalChange('age')}
-                                />
-                            </FormGroup>
-                        </div>
-
-
-                    </Modal.Body>
-
-                    <Modal.Footer className="text-center">
-                        <Button bordered style={{ marginRight: 20 }} onClick={this.close.bind(this)}>
-                            取消
-                        </Button>
-                        <Button colors="primary" onClick={this.saveToTable.bind(this)}>
-                            确认
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
             </div>
         );
     }

@@ -54,13 +54,13 @@ export const saveList = (params) => {
         data:params
     });
 }
-export const saveZhubiaotest = (params) => {
+export const saveDemo_table = (params) => {
     return request(URL.SAVE_ORDER, {
         method: "post",
         data: params
     });
 }
-export const delZhubiaotest = (params) => {
+export const delDemo_table = (params) => {
     return request(URL.DEL_ORDER, {
         method: "post",
         data: params

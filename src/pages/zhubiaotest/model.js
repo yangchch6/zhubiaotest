@@ -5,17 +5,6 @@ import * as api from "./service";
 import { processData } from "utils";
 import moment from 'moment';
 
-/**
- *          btnFlag为按钮状态，新增、修改是可编辑，查看详情不可编辑，
- *          新增表格为空
- *          修改需要将行数据带上并显示在卡片页面
- *          查看详情携带行数据但是表格不可编辑
- *          0表示新增、1表示编辑，2表示查看详情 3提交
- *async loadList(param, getState) {
- *          rowData为行数据
-*/
-
-
 export default {
     // 确定 Store 中的数据模型作用域
     name: "zhubiaotest",
@@ -35,6 +24,7 @@ export default {
         childListzibiaotest01:[],        //子表01
         cacheArrayzibiaotest01:[],       //缓存数据01
         delArrayzibiaotest01:[],
+        grandSonData:[],                 //孙表
         detail:{},
         searchParam:{},
         validateNum:99,//不存在的step
@@ -167,6 +157,7 @@ export default {
             let {data:{detailMsg}}=await api.getDetail(param);
                     let childData = [...detailMsg.zibiaotestList] ;
                     let childData01 = [...detailMsg.zibiaotest01List];
+                    let subList = [];//孙表数据
                     let cacheArrayzibiaotest = [];
                     let tempArrayzibiaotest = [];
                     let cacheArrayzibiaotest01 = [];
@@ -176,8 +167,10 @@ export default {
                             let temp = Object.assign({},item);
                             temp.uuid = setTimeout(function(){},1);
                             tempArrayzibiaotest.push(temp);
+                            subList.push(item.subList);
                         })
                     }
+                    console.log("subList:",subList);
 
                     if(childData01) {
                         childData01.map((item,index)=>{
@@ -211,6 +204,7 @@ export default {
                         cacheArrayzibiaotest:cacheArrayzibiaotest,
                         childListzibiaotest01:tempArrayzibiaotest01,
                         cacheArrayzibiaotest01:cacheArrayzibiaotest01,
+                        grandSonData:subList
                     })
             return  detailMsg.entity;
         },

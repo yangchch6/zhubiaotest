@@ -5,6 +5,7 @@ import PaginationTable from 'components/PaginationTable';
 import options from "components/RefOption";
 import RefWithInput from 'yyuap-ref/dist2/refWithInput';
 import Form from 'bee-form';
+import GrandSonTableTest from '../zibiaotest-suntable';
 import { 
     InputNumber, InputGroup,FormControl, 
     Loading, 
@@ -44,7 +45,8 @@ class ChildTable extends Component {
             editFlag:true,
             showModal: false,
             pk_zhubiao:"",
-            age:""
+            age:"",
+            grandSonList:[]
             
         };
         let {btnFlag} = this.props;
@@ -57,28 +59,14 @@ class ChildTable extends Component {
                 dataIndex: "pkZhubiao",
                 key: "pkZhubiao",
                 width: 150,
-                render: (text, record, index) => this.
-                renderColumns
-                
-                
-                
-                
-                
-                (text, record, index, "pkZhubiao",this.editFlag)
+                render: (text, record, index) => this.renderColumns(text, record, index, "pkZhubiao",this.editFlag)
             },
             {
                 title: "age",
                 dataIndex: "age",
                 key: "age",
                 width: 150,
-                render: (text, record, index) => this.
-                renderColumns
-                
-                
-                
-                
-                
-                (text, record, index, "age",this.editFlag)
+                render: (text, record, index) => this.renderColumns(text, record, index, "age",this.editFlag)
             },
             {
                 title: "操作",
@@ -128,6 +116,12 @@ class ChildTable extends Component {
             }
         </div>
     )
+
+    //子表的行点击事件
+    rowclick = (record,index) => {
+        let {grandSonData} = this.props;
+        this.setState({grandSonList : grandSonData[index]})
+    }
 
     handleChange = (value, index, column)=>{
         const newData = [...this.props.childListzibiaotest];
@@ -425,9 +419,9 @@ class ChildTable extends Component {
                 <div className="chidtable-operate-btn">
                     {this.editFlag ? <Button size='sm' colors="primary" onClick={this.onAddEmptyRowTable}>增行(表编辑)</Button> :"" }
                 </div>
-                <div className="chidtable-operate-btn">
+                {/* <div className="chidtable-operate-btn">
                     {this.editFlag ? <Button size='sm' colors="primary" onClick={this.onAddEmptyRowModal}>增行(弹框)</Button> :"" }
-                </div>
+                </div> */}
                 <Row className='table-list'>
                     <Col md={12}>
                         <Table
@@ -437,8 +431,12 @@ class ChildTable extends Component {
                             data={childList}
                             rowKey={r => r.id}
                             columns={this.column}
+                            onRowClick={this.rowclick}
                             scroll={{ x: '100%', y: 520 }}
                         />
+                    </Col>
+                    <Col md={12}>
+                        <GrandSonTableTest data={this.state.grandSonList} />
                     </Col>
                 </Row>
                 <Modal

@@ -5,9 +5,9 @@ import { Button,Message,Modal, Loading } from 'tinper-bee';
 import Select from 'bee-select';
 import moment from "moment/moment";
 import Header from 'components/Header';
-import ZhubiaotestForm from '../zhubiaotest-form';
+import Demo_tableForm from '../demo_table-form';
 import './index.less'
-export default class ZhubiaotestPaginationTable extends Component {
+export default class Demo_tablePaginationTable extends Component {
     constructor(props){
         super(props);
         let self=this;
@@ -51,7 +51,7 @@ export default class ZhubiaotestPaginationTable extends Component {
     
     componentDidMount(){
         // this.setState({ step: this.props.pageSize })
-        actions.zhubiaotest.loadList();//table数据
+        actions.demo_table.loadList();//table数据
     }
 
     tabelSelect = (data) => {//tabel选中数据
@@ -64,7 +64,7 @@ export default class ZhubiaotestPaginationTable extends Component {
      */
 
     cellClick = async (record,btnFlag) => {
-        await actions.zhubiaotest.updateState({
+        await actions.demo_table.updateState({
             rowData : record,
         });
 
@@ -74,7 +74,7 @@ export default class ZhubiaotestPaginationTable extends Component {
         }
         actions.routing.push(
             {
-                pathname: 'zhubiaotest-edit',
+                pathname: 'demo_table-edit',
                 search:`?search_id=${id}&btnFlag=${btnFlag}`
             }
         )
@@ -99,40 +99,40 @@ export default class ZhubiaotestPaginationTable extends Component {
 
     // 分页单页数据条数选择函数
     onPageSizeSelect = (index, value) => {
-        actions.zhubiaotest.loadList({
+        actions.demo_table.loadList({
             pageSize: value
         })
-        actions.zhubiaotest.updateState({
+        actions.demo_table.updateState({
             pageSize: value
         })
     }
 
     // 分页组件点击页面数字索引执行函数
     onPageIndexSelect = value => {
-        actions.zhubiaotest.loadList({
+        actions.demo_table.loadList({
             pageIndex: value
         })
-        actions.zhubiaotest.updateState({
+        actions.demo_table.updateState({
             pageIndex: value
         })
     }
 
     // 流程提交成功后回调函数
     onSubmitSuc = async ()=>{
-        await actions.zhubiaotest.loadList();
-        actions.zhubiaotest.updateState({showLoading:false});
+        await actions.demo_table.loadList();
+        actions.demo_table.updateState({showLoading:false});
         Message.create({content: '单据提交成功', color: 'success'});
 
     }
     
     // 提交操作初始执行操作
     onSubmitStart = ()=>{
-        actions.zhubiaotest.updateState({showLoading:true});
+        actions.demo_table.updateState({showLoading:true});
 
     }
     // 提交失败回调函数
     onSubmitFail = (error)=>{
-        actions.zhubiaotest.updateState({showLoading:false});
+        actions.demo_table.updateState({showLoading:false});
         Message.create({content: error.msg, color: 'danger'});
 
     }
@@ -140,36 +140,36 @@ export default class ZhubiaotestPaginationTable extends Component {
     // 撤回成功回调函数
     onRecallSuc = async ()=>{
         console.log("onRecallSuc 成功进入recall回调");
-        await actions.zhubiaotest.loadList();
-        actions.zhubiaotest.updateState({showLoading:false});
+        await actions.demo_table.loadList();
+        actions.demo_table.updateState({showLoading:false});
         Message.create({content: '单据撤回成功', color: 'success'});
 
     }
 
     // 撤回失败回调函数
     onRecallFail = (error)=>{
-        actions.zhubiaotest.updateState({showLoading:false});
+        actions.demo_table.updateState({showLoading:false});
         Message.create({content: error.msg, color: 'danger'});
 
     }
 
 
     onSubmitEnd = () => {
-        actions.zhubiaotest.updateState({ showLoading: false });
+        actions.demo_table.updateState({ showLoading: false });
     }
 
     // 撤回操作执行起始函数,通常用于设置滚动条
     onRecallStart = ()=>{
-        actions.zhubiaotest.updateState({showLoading:true});
+        actions.demo_table.updateState({showLoading:true});
     }
 
     // 查看方法
     onExamine = async (text, record, index)=> {
         console.log("record", record);
-        await actions.zhubiaotest.updateState({rowData:record});
+        await actions.demo_table.updateState({rowData:record});
         await actions.routing.push(
             {
-                pathname: 'zhubiaotest-edit',
+                pathname: 'demo_table-edit',
                 detailObj: record,
             }
         )
@@ -179,7 +179,7 @@ export default class ZhubiaotestPaginationTable extends Component {
     onModalDel = async (delFlag)=>{
         let {delData} = this.state;
         if(delFlag){
-            await actions.zhubiaotest.delItem({
+            await actions.demo_table.delItem({
                 param: delData
             });
         }
@@ -206,9 +206,9 @@ export default class ZhubiaotestPaginationTable extends Component {
         let exportProps = { total, pageIndex, pageSize, selectData, list};
         console.log("list",list)
         return (
-            <div className='zhubiaotest-root'>
-                <Header title='主子表'/>
-                <ZhubiaotestForm { ...this.props }/>
+            <div className='demo_table-root'>
+                <Header title='主子孙表'/>
+                <Demo_tableForm { ...this.props }/>
                 <div className='table-header mt25'>
                     <Button colors="primary" style={{"marginLeft":15}} size='sm' onClick={() => { self.cellClick({},0) }}>
                     新增

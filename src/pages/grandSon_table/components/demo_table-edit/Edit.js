@@ -13,8 +13,7 @@ import moment from "moment";
 import 'yyuap-ref/dist2/yyuap-ref.css'//参照样式
 import './edit.less';
 import 'ac-upload/build/ac-upload.css';
-import ChildTablezibiaotest from '../zibiaotest-childtable';
-import ChildTablezibiaotestSecond from '../zibiaotest-childtable-second';
+import ChildTabledemo_child from '../demo_child-childtable';
 import { setCookie, getCookie} from "utils";
 
 const FormItem = Form.FormItem;
@@ -30,12 +29,12 @@ class Edit extends Component {
         }
     }
     async componentWillMount() {
-        await actions.zhubiaotest.getOrderTypes();
+        await actions.demo_table.getOrderTypes();
         let searchObj = queryString.parse(this.props.location.search);
         let { btnFlag } = searchObj;
         if (btnFlag && btnFlag > 0) {
             let { search_id } = searchObj;
-            let tempRowData = await actions.zhubiaotest.queryDetail({ search_id });
+            let tempRowData = await actions.demo_table.queryDetail({ search_id });
             let rowData = this.handleRefShow(tempRowData) || {};
 
             console.log('rowData',rowData);
@@ -64,18 +63,17 @@ class Edit extends Component {
                     values.id = rowData.id;
                     values.ts = rowData.ts;
                 }
-                    let {childListzibiaotest,cacheArrayzibiaotest,delArrayzibiaotest,
-                        childListzibiaotest01,cacheArrayzibiaotest01,delArrayzibiaotest01} = this.props;
+                    let {childListdemo_child,cacheArraydemo_child,delArraydemo_child} = this.props;
                     // 编辑保存但是未修改参照,修改参照字段为参照id数组
-                    if(childListzibiaotest) {
-                        childListzibiaotest.map((item,index)=>{
+                    if(childListdemo_child) {
+                        childListdemo_child.map((item,index)=>{
                                     // 判断参照值是否有改动
                                     let uuid = item.uuid,
                                         refArray = [
                                         ],
                                         tempRefIdName =  [
                                         ],
-                                        target = cacheArrayzibiaotest.filter(item=>item.uuid==uuid)[0];
+                                        target = cacheArraydemo_child.filter(item=>item.uuid==uuid)[0];
                             // 处理单行多个参照
                                     for (let i=0,len=refArray.length; i<len; i++) {
                                         let tempRef = item[refArray[i]+uuid],
@@ -95,33 +93,26 @@ class Edit extends Component {
 
                         })
                     }
-                    console.log('save childList',childListzibiaotest)
-                    console.log('save delArray',delArrayzibiaotest);
+                    console.log('save childList',childListdemo_child)
+                    console.log('save delArray',delArraydemo_child);
                     // 添加删除的数组，删除的数组中dr项的值都为1
-                    let resultArray = childListzibiaotest.concat(delArrayzibiaotest);
-                    let resultArray01 = childListzibiaotest01.concat(delArrayzibiaotest01);
+                    let resultArray = childListdemo_child.concat(delArraydemo_child);
 
                     let commitData = {
                         entity : values,
                         sublist:{
-                                zibiaotestList:resultArray,
-                                zibiaotest01List:resultArray01
+                                demo_childList:resultArray,
                         }
                     };
                     console.log("save values", JSON.stringify(commitData));
 
-
-                await actions.zhubiaotest.save(
+                await actions.demo_table.save(
                     commitData,
                 );
                 // 置空缓存数据和删除数组
-                await actions.zhubiaotest.updateState({
-                        cacheArrayzibiaotest:[],
-                        delArrayzibiaotest:[],
-                        childListzibiaotest:[],
-                        cacheArrayzibiaotest01:[],
-                        delArrayzibiaotest01:[],
-                        childListzibiaotest01:[]
+                await actions.demo_table.updateState({
+                        cacheArraydemo_child:[],
+                        delArraydemo_child:[],
                 })
             }
         });
@@ -146,13 +137,13 @@ class Edit extends Component {
     }
 
     onBack = async() => {
-            await actions.zhubiaotest.updateState({
-                childListzibiaotest: [],
-                cacheArrayzibiaotest:[],
-                delArrayzibiaotest:[],
-                childListzibiaotest01: [],
-                cacheArrayzibiaotest01:[],
-                delArrayzibiaotest01:[],
+            await actions.demo_table.updateState({
+                    childListdemo_child: [],
+                    cacheArrademo_child:[],
+                    delArraydemo_child:[],
+                    childListdemo_child2: [],
+                    cacheArrademo_child2:[],
+                    delArraydemo_child2:[],
             })
         window.history.go(-1);
     }
@@ -185,25 +176,15 @@ class Edit extends Component {
         } = this.state;
 
         let {
-                cacheArrayzibiaotest,
-                delArrayzibiaotest,
-                childListzibiaotest,
-                cacheArrayzibiaotest01,
-                delArrayzibiaotest01,
-                childListzibiaotest01
-                
+                cacheArraydemo_child,
+                delArraydemo_child,
+                childListdemo_child,
         } = this.props;
 
         let childObj = {
-                cacheArrayzibiaotest,
-                delArrayzibiaotest,
-                childListzibiaotest,
-        }
-
-        let childObj2 = {
-            cacheArrayzibiaotest01,
-            delArrayzibiaotest01,
-            childListzibiaotest01
+                cacheArraydemo_child,
+                delArraydemo_child,
+                childListdemo_child
         }
 
         let title = this.onChangeHead(btnFlag);
@@ -211,7 +192,7 @@ class Edit extends Component {
         const { getFieldProps, getFieldError } = this.props.form;
 
         return (
-            <div className='zhubiaotest-detail'>
+            <div className='demo_table-detail'>
                 <Loading
                     showBackDrop={true}
                     loadingType="line"
@@ -273,16 +254,10 @@ class Edit extends Component {
 
                         <div className="master-tag">
                             <div className="childhead">
-                                <span className="workbreakdown" >子表1</span>
+                                <span className="workbreakdown" >demo子表</span>
                             </div>
                         </div>
-                        <ChildTablezibiaotest btnFlag={btnFlag} {...childObj}/>
-                        {/* <div className="master-tag">
-                            <div className="childhead">
-                                <span className="workbreakdown" >子表2</span>
-                            </div>
-                        </div>
-                        <ChildTablezibiaotestSecond btnFlag={btnFlag} {...childObj2}/> */}
+                        <ChildTabledemo_child btnFlag={btnFlag} {...childObj}/>
 
             </div>
         )

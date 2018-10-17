@@ -3,10 +3,10 @@ import { Button,Checkbox,Table } from 'tinper-bee';
 import moment from "moment/moment";
 import multiSelect from "tinper-bee/lib/multiSelect.js";
 import Header from 'components/Header';
-import ZhubiaotestForm from '../zhubiaotest-form';
+import Demo_tableForm from '../demo_table-form';
 const MultiSelectTable = multiSelect(Table, Checkbox);
 
-export default class ZhubiaotestSelectTable extends Component {
+export default class Demo_tableSelectTable extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -67,9 +67,9 @@ export default class ZhubiaotestSelectTable extends Component {
             }
         ];
         return (
-            <div className="zhubiaotest-select-table">
-                <Header title='zhubiaotest' back={true} />
-                <ZhubiaotestForm { ...this.props }/>
+            <div className="demo_table-select-table">
+                <Header title='demo主表' back={true} />
+                <Demo_tableForm { ...this.props }/>
                 <div className="table-list">
                     <MultiSelectTable
                         loading={{ show: showLoading, loadingType: "line" }}

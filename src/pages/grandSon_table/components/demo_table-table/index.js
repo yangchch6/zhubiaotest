@@ -5,8 +5,8 @@ import moment from "moment/moment";
 
 import './index.less'
 
-// ZhubiaotestTable 组件定义
-class ZhubiaotestTable extends Component {
+// Demo_tableTable 组件定义
+class Demo_tableTable extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -20,20 +20,22 @@ class ZhubiaotestTable extends Component {
 
         // 新增、编辑、查看时,先清空子表数据
         await actions.mastertable.updateState({
-            childListzibiaotest:[],
-            cacheArrayzibiaotest:[],
+            childListdemo_child:[],
+            cacheArraydemo_child:[],
+            childListdemo_child2:[],
+            cacheArraydemo_child2:[],
         })
 
         actions.routing.push(
             {
-                pathname: 'zhubiaotest-edit',
+                pathname: 'demo_table-edit',
                 detailObj: record,
                 editFlag: !!editFlag
             }
         )
     }
     delItem = (record, index) => {
-        actions.zhubiaotest.delItem({
+        actions.demo_table.delItem({
             param: [{ id: record.id,ts: record.ts }],
             index: index
         });
@@ -102,4 +104,4 @@ class ZhubiaotestTable extends Component {
     }
 }
 
-export default ZhubiaotestTable
+export default Demo_tableTable

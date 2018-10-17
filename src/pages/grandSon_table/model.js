@@ -5,20 +5,10 @@ import * as api from "./service";
 import { processData } from "utils";
 import moment from 'moment';
 
-/**
- *          btnFlag为按钮状态，新增、修改是可编辑，查看详情不可编辑，
- *          新增表格为空
- *          修改需要将行数据带上并显示在卡片页面
- *          查看详情携带行数据但是表格不可编辑
- *          0表示新增、1表示编辑，2表示查看详情 3提交
- *async loadList(param, getState) {
- *          rowData为行数据
-*/
-
 
 export default {
     // 确定 Store 中的数据模型作用域
-    name: "zhubiaotest",
+    name: "demo_table",
     // 设置当前 Model 所需的初始化 state
     initialState: {
         rowData:{},
@@ -29,12 +19,9 @@ export default {
         pageSize:10,
         totalPages:1,
         total:0,
-        childListzibiaotest:[],          //子表
-        cacheArrayzibiaotest:[],         //缓存数据
-        delArrayzibiaotest:[],
-        childListzibiaotest01:[],        //子表01
-        cacheArrayzibiaotest01:[],       //缓存数据01
-        delArrayzibiaotest01:[],
+        childListdemo_child:[],          //子表
+        cacheArraydemo_child:[],         //缓存数据
+        delArraydemo_child:[],
         detail:{},
         searchParam:{},
         validateNum:99,//不存在的step
@@ -61,7 +48,7 @@ export default {
          */
         async loadList(param, getState) {
             // 正在加载数据，显示加载 Loading 图标
-            actions.zhubiaotest.updateState({ showLoading:true })
+            actions.demo_table.updateState({ showLoading:true })
             if(param){
                 param.pageIndex = param.pageIndex ? param.pageIndex - 1 : 0;
                 param.pageSize = param.pageSize ? param.pageSize : 10;
@@ -70,7 +57,7 @@ export default {
             }
             // 调用 getList 请求数据
             let res = processData(await api.getList(param));
-            actions.zhubiaotest.updateState({  showLoading:false })
+            actions.demo_table.updateState({  showLoading:false })
             if (res) {
                 if(res.content&&res.content.length){
                     for(let i=0;i<res.content.length;i++){
@@ -85,7 +72,7 @@ export default {
                     }
                 }
                 // console.log('res content',res.content);
-                actions.zhubiaotest.updateState({
+                actions.demo_table.updateState({
                     list: res.content,
                     pageIndex:res.number + 1,
                     totalPages:res.totalPages,
@@ -100,7 +87,7 @@ export default {
          * @param {*} getState
          */
         getOrderTypes(param,getState){
-            actions.zhubiaotest.updateState({
+            actions.demo_table.updateState({
             orderTypes:  [{
                 "code":"0",
                 "name":"D001"
@@ -137,81 +124,59 @@ export default {
         },
 
         async delItem(param,getState){
-            actions.zhubiaotest.updateState({
+            actions.demo_table.updateState({
               showLoading:true
             })
-            let res=processData(await api.delZhubiaotest(param.param),'删除成功');
-            actions.zhubiaotest.loadList();
+            let res=processData(await api.delDemo_table(param.param),'删除成功');
+            actions.demo_table.loadList();
         },
 
         async save(param,getState){//保存
-            actions.zhubiaotest.updateState({
+            actions.demo_table.updateState({
               showLoading:true
             })
-            let res = processData(await api.saveZhubiaotest(param),'保存成功');
+            let res = processData(await api.saveDemo_table(param),'保存成功');
             console.log("保存信息",res);
             if(res){
                window.history.go(-1);
             }
-            actions.zhubiaotest.updateState({
+            actions.demo_table.updateState({
                 showLoading:false,
 
             });
         },
 
         async queryDetail(param,getState) {
-            await actions.zhubiaotest.updateState({
-                childListzibiaotest:[],
-                childListzibiaotest01:[]
+            await actions.demo_table.updateState({
+                childListdemo_child:[],
             });
             let {data:{detailMsg}}=await api.getDetail(param);
-                    let childData = [...detailMsg.zibiaotestList] ;
-                    let childData01 = [...detailMsg.zibiaotest01List];
-                    let cacheArrayzibiaotest = [];
-                    let tempArrayzibiaotest = [];
-                    let cacheArrayzibiaotest01 = [];
-                    let tempArrayzibiaotest01 = [];
+                    let childData = [...detailMsg.demo_childList] ;
+                    let cacheArraydemo_child = [];
+                    let tempArraydemo_child = [];
                     if(childData) {
-                        childData.map((item,index)=>{
+                        childData.map((item)=>{
                             let temp = Object.assign({},item);
                             temp.uuid = setTimeout(function(){},1);
-                            tempArrayzibiaotest.push(temp);
-                        })
-                    }
-
-                    if(childData01) {
-                        childData01.map((item,index)=>{
-                            let temp = Object.assign({},item);
-                            temp.uuid = setTimeout(function(){},1);
-                            tempArrayzibiaotest01.push(temp);
+                            tempArraydemo_child.push(temp);
                         })
                     }
 
                     // tempArray中修改参照字段
-                    if(tempArrayzibiaotest) {
-                        tempArrayzibiaotest.map((item)=>{
+                    if(tempArraydemo_child) {
+                        tempArraydemo_child.map((item)=>{
                             let temp = Object.assign({},item);
-                            cacheArrayzibiaotest.push(temp);
+                            cacheArraydemo_child.push(temp);
                         })
                     }
 
-                    // tempArray中修改参照字段
-                    if(tempArrayzibiaotest01) {
-                        tempArrayzibiaotest01.map((item)=>{
-                            let temp = Object.assign({},item);
-                            cacheArrayzibiaotest01.push(temp);
-                        })
-                    }
+                    console.log("childList,cacheArray",tempArraydemo_child,cacheArraydemo_child);
 
-                    console.log("childList,cacheArray",tempArrayzibiaotest,cacheArrayzibiaotest);
-                    console.log("childList01,cacheArray01",tempArrayzibiaotest01,cacheArrayzibiaotest01);
-
-                    await actions.zhubiaotest.updateState({
-                        childListzibiaotest:tempArrayzibiaotest,
-                        cacheArrayzibiaotest:cacheArrayzibiaotest,
-                        childListzibiaotest01:tempArrayzibiaotest01,
-                        cacheArrayzibiaotest01:cacheArrayzibiaotest01,
+                    await actions.demo_table.updateState({
+                        childListdemo_child:tempArraydemo_child,
+                        cacheArraydemo_child:cacheArraydemo_child
                     })
+                    
             return  detailMsg.entity;
         },
 

@@ -7,7 +7,7 @@ import Header from 'components/Header';
 
 import './index.less';
 
-class ZhubiaotestBpmChart extends Component {
+class Demo_tableBpmChart extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -17,7 +17,7 @@ class ZhubiaotestBpmChart extends Component {
     onBack = ()=>{
         actions.routing.push(
             {
-                pathname: 'zhubiaotest-edit',
+                pathname: 'demo_table-edit',
                 editFlag: false
             }
         )
@@ -37,4 +37,4 @@ class ZhubiaotestBpmChart extends Component {
     }
 }
 
-export default ZhubiaotestBpmChart;
+export default Demo_tableBpmChart;

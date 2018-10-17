@@ -12,7 +12,7 @@ import RefWithInput from 'yyuap-ref/dist2/refWithInput'
 import 'yyuap-ref/dist2/yyuap-ref.css'//参照样式
 import './index.less'
 
-class ZhubiaotestForm extends Component {
+class Demo_tableForm extends Component {
     constructor(props){
         super(props)
         this.state = {
@@ -21,8 +21,8 @@ class ZhubiaotestForm extends Component {
         }
     }
     componentWillMount(){
-        // 获得zhubiaotest列表数据
-        actions.zhubiaotest.getOrderTypes();
+        // 获得demo主表列表数据
+        actions.demo_table.getOrderTypes();
     }
     /** 查询数据
      * @param {*} error 校验是否成功
@@ -34,7 +34,7 @@ class ZhubiaotestForm extends Component {
             values.pageSize = this.props.pageSize || 10;
             let {
             } = this.state;
-            await actions.zhubiaotest.loadList(values);
+            await actions.demo_table.loadList(values);
         });
 
 
@@ -56,26 +56,12 @@ class ZhubiaotestForm extends Component {
         } = this.state;
         return (
             <SearchPanel
-                    className='zhubiaotest-form'
+                    className='demo_table-form'
                     form={this.props.form}
                     reset={this.reset}
                     search={this.search}>
                 <Row>
 
-                            <Col md={4} xs={6}>
-                                <FormItem>
-                                    <Label>code</Label>
-                                    <FormControl
-                                            {
-                                            ...getFieldProps('code', {
-                                                initialValue: '',
-                                            })
-                                        }
-                                    />
-
-
-                                </FormItem>
-                            </Col>
                             <Col md={4} xs={6}>
                                 <FormItem>
                                     <Label>name</Label>
@@ -96,4 +82,4 @@ class ZhubiaotestForm extends Component {
     }
 }
 
-export default Form.createForm()(ZhubiaotestForm)
+export default Form.createForm()(Demo_tableForm)
