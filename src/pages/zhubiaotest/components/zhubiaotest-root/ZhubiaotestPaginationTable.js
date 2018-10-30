@@ -6,6 +6,9 @@ import Select from 'bee-select';
 import moment from "moment/moment";
 import Header from 'components/Header';
 import ZhubiaotestForm from '../zhubiaotest-form';
+import HistoryTable from '../history-table';
+import Viewer from 'bee-viewer';
+import 'bee-viewer/build/Viewer.css';
 import './index.less'
 export default class ZhubiaotestPaginationTable extends Component {
     constructor(props){
@@ -30,6 +33,25 @@ export default class ZhubiaotestPaginationTable extends Component {
                     key: "name",
                 },
                 {
+                    title: "照片",
+                    dataIndex: "photo",
+                    key: "photo",
+                    render(text, record, index){
+                        let photoTemp = record.photo;
+                        return (
+                            <Viewer shown={self.shown} hidden={self.hidden}>
+                                <div>
+                                    {photoTemp?
+                                        photoTemp.map((item,index) => {
+                                            return (<img id="image" key={index} src={item} alt="Picture"/>)
+                                        }) :null
+                                    }
+                                </div>
+                            </Viewer>
+                        )
+                    }
+                },
+                {
                     title: "操作",
                     dataIndex: "d",
                     key: "d",
@@ -52,6 +74,14 @@ export default class ZhubiaotestPaginationTable extends Component {
     componentDidMount(){
         // this.setState({ step: this.props.pageSize })
         actions.zhubiaotest.loadList();//table数据
+    }
+
+    shown=(e)=>{
+        console.log(e,'shwon')
+    }
+    
+    hidden=(e)=>{
+        console.log(e,'hidden')
     }
 
     tabelSelect = (data) => {//tabel选中数据
@@ -230,7 +260,8 @@ export default class ZhubiaotestPaginationTable extends Component {
                         onPageSizeSelect={this.onPageSizeSelect}
                         onPageIndexSelect={this.onPageIndexSelect}
                 />
-                <Loading show={showLoading} loadingType="line" />
+                {/* <Loading show={showLoading} loadingType="line" /> */}
+                <HistoryTable />
                 <Modal
                         show={showModal}
                         onHide={this.close} >

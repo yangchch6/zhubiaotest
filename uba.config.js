@@ -51,6 +51,19 @@ const proxyConfig = [
       '/demoOrder'
     ],
     url: 'http://192.168.137.1:8180'
+  },
+  // mock地址
+  {
+    enable: false,
+    headers: {
+      // 这是之前网页的地址，从中可以看到当前请求页面的链接。
+      "Referer": "https://mock.yonyoucloud.com/mock/311/demoOrder"
+    },
+    // context，如果不配置，默认就是代理全部。
+    router: [
+      '/demoOrder'
+    ],
+    url: 'https://mock.yonyoucloud.com/mock/311/demoOrder'
   }
 ];
 

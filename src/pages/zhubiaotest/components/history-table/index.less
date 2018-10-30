@@ -1,0 +1,65 @@
+.history-table{
+    .history-btn{
+        position: absolute;
+        right: 0;
+        top: 50%;
+        -ms-transform:translateY(-50%);
+        -o-transform:translateY(-50%);
+        -moz-transform:translateY(-50%);
+        -webkit-transform: translateY(-50%);
+        transform: translateY(-50%);
+        width: 35px;
+        height: 102px;
+        color: #fff;
+        border-bottom-left-radius: 15px;
+        border-top-left-radius: 15px;
+        text-align: center;
+        line-height: 102px;
+        padding: 4px;
+        background: rgb(3, 137, 77);
+        cursor: pointer;
+    }
+}
+body{
+    overflow-x: hidden;
+    .u-modal{
+        .u-modal-dialog{
+            position: absolute;
+            top: 50%;
+            margin: 0;
+            right: 35px;
+            .u-modal-header{
+                background: rgb(3, 137, 77);
+                .u-modal-title{
+                    text-align: center;
+                    color: #fff;
+                }
+            }
+        }
+        &.fade .u-modal-dialog {
+            -ms-transform:translate(35px,-50%);
+            -o-transform:translate(35px,-50%);
+            -moz-transform:translate(35px,-50%);
+            -webkit-transform: translate(35px,-50%);
+            transform: translate(35px,-50%);
+            -webkit-transition: -webkit-transform .3s ease-out;
+            transition: transform .3s ease-out;
+        }
+        &.in .u-modal-dialog {
+            -ms-transform:translate(0,-50%);
+            -o-transform:translate(0,-50%);
+            -moz-transform:translate(0,-50%);
+            -webkit-transform: translate(0,-50%);
+            transform: translate(0,-50%);
+        }
+        .u-modal-body{
+            .u-table-body{
+                .u-table-thead th{
+                    background: rgb(3, 137, 77);
+                    color: #fff; 
+                    text-align: center;
+                }
+            }
+        }
+    }
+}

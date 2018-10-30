@@ -21,7 +21,19 @@ export default {
         total:0,
         childListdemo_child:[],          //子表
         cacheArraydemo_child:[],         //缓存数据
-        delArraydemo_child:[],
+        delArraydemo_child:[], 
+        childListdemo_child1:[],          //子表1
+        cacheArraydemo_child1:[],         //缓存数据
+        delArraydemo_child1:[],
+        childListdemo_child2:[],          //子表2
+        cacheArraydemo_child2:[],         //缓存数据
+        delArraydemo_child2:[],
+        childListdemo_child3:[],          //子表3
+        cacheArraydemo_child3:[],         //缓存数据
+        delArraydemo_child3:[],
+        grandSonData:[], //孙表
+        grandSonData2:[], //孙表2
+        grandSonData3:[], //孙表3
         detail:{},
         searchParam:{},
         validateNum:99,//不存在的step
@@ -146,42 +158,93 @@ export default {
             });
         },
 
+        /**
+         * handleResList：处理getDetail这个Api返回的detailMsg，分离出子表和孙表数据，避免多子表情况下的冗余代码
+         * @param {*} childData，getDetail接口返回的详细数据
+         */
+        handleResList(childData){
+            let cacheArraydemo_child = [];
+            let tempArraydemo_child = [];
+            let subList = [];//孙表数据
+            if(childData) {
+                childData.map((item)=>{
+                    let temp = Object.assign({},item);
+                    temp.uuid = setTimeout(function(){},1);
+                    tempArraydemo_child.push(temp);
+                    subList.push(item.subList);
+                })
+            }
+
+            // tempArray中修改参照字段
+            if(tempArraydemo_child) {
+                tempArraydemo_child.map((item)=>{
+                    let temp = Object.assign({},item);
+                    cacheArraydemo_child.push(temp);
+                })
+            }
+
+            console.log(`childList,cacheArray,grandSonData`,tempArraydemo_child,cacheArraydemo_child,subList);
+
+            return {
+                tempArraydemo_child,
+                cacheArraydemo_child,
+                subList
+            }
+        },
+
         async queryDetail(param,getState) {
             await actions.demo_table.updateState({
                 childListdemo_child:[],
+                childListdemo_child2:[],
             });
             let {data:{detailMsg}}=await api.getDetail(param);
-                    let childData = [...detailMsg.demo_childList] ;
-                    let cacheArraydemo_child = [];
-                    let tempArraydemo_child = [];
-                    if(childData) {
-                        childData.map((item)=>{
-                            let temp = Object.assign({},item);
-                            temp.uuid = setTimeout(function(){},1);
-                            tempArraydemo_child.push(temp);
-                        })
-                    }
 
-                    // tempArray中修改参照字段
-                    if(tempArraydemo_child) {
-                        tempArraydemo_child.map((item)=>{
-                            let temp = Object.assign({},item);
-                            cacheArraydemo_child.push(temp);
-                        })
-                    }
+            //============从这里开始更改代码================
+            let childData1 = [...detailMsg.zibiao1testList],
+                childData2 = [...detailMsg.zibiao2testList],
+                childData3 = [...detailMsg.zibiao3testList] 
 
-                    console.log("childList,cacheArray",tempArraydemo_child,cacheArraydemo_child);
+            //子表1
+            let { 
+                tempArraydemo_child:tempArraydemo_child1, 
+                cacheArraydemo_child:cacheArraydemo_child1, 
+                subList:subList1
+            } = actions.demo_table.handleResList(childData1);
 
-                    await actions.demo_table.updateState({
-                        childListdemo_child:tempArraydemo_child,
-                        cacheArraydemo_child:cacheArraydemo_child
-                    })
+            //子表2
+            let {   
+                tempArraydemo_child:tempArraydemo_child2, 
+                cacheArraydemo_child:cacheArraydemo_child2, 
+                subList:subList2
+            } = actions.demo_table.handleResList(childData2)
+
+            //子表3
+            let {
+                tempArraydemo_child:tempArraydemo_child3, 
+                cacheArraydemo_child:cacheArraydemo_child3, 
+                subList:subList3
+            } = actions.demo_table.handleResList(childData3)
+
+            //子表N
+            // ......
+
+            //===================以上===================
+
+            //更新state
+            await actions.demo_table.updateState({
+                childListdemo_child1:tempArraydemo_child1,
+                cacheArraydemo_child1:cacheArraydemo_child1,
+                childListdemo_child2:tempArraydemo_child2,
+                cacheArraydemo_child2:cacheArraydemo_child2,
+                childListdemo_child3:tempArraydemo_child3,
+                cacheArraydemo_child3:cacheArraydemo_child3,
+                // grandSonData:subList,
+                grandSonData2:subList2,
+                grandSonData3:subList3,
+            })
                     
             return  detailMsg.entity;
         },
-
-        
-
 
     }
 };

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { actions ,connect } from "mirrorx";
 import queryString from 'query-string';
 import PaginationTable from 'components/PaginationTable';
+import DetailDescTable from './components/detailDesc-table';
 import options from "components/RefOption";
 import RefWithInput from 'yyuap-ref/dist2/refWithInput';
 import Form from 'bee-form';
@@ -41,7 +42,7 @@ class ChildTable extends Component {
         this.state = { 
             selectData:[],
             editFlag:true,
-            
+            grandSonList:[],
         };
         let {btnFlag} = this.props;
         this.editFlag = btnFlag ? btnFlag<2 : true;
@@ -49,32 +50,27 @@ class ChildTable extends Component {
         
         this.column = [
             {
-                title: "code",
-                dataIndex: "code",
-                key: "code",
-                width: 150,
-                render: (text, record, index) => this.
-                renderColumns
-                
-                
-                
-                
-                
-                (text, record, index, "code",this.editFlag)
+                title: "序号",
+                dataIndex: "index",
+                key: "index",
+                width: 100,
+                render(text, record, index){
+                    return index+1
+                }
             },
             {
-                title: "name",
-                dataIndex: "name",
-                key: "name",
+                title: "个数",
+                dataIndex: "number",
+                key: "number",
                 width: 150,
-                render: (text, record, index) => this.
-                renderColumns
-                
-                
-                
-                
-                
-                (text, record, index, "name",this.editFlag)
+                render: (text, record, index) => this.renderColumns(text, record, index, "number",this.editFlag)
+            },
+            {
+                title: "预计天数",
+                dataIndex: "expected_days",
+                key: "expected_days",
+                width: 150,
+                render: (text, record, index) => this.renderColumns(text, record, index, "expected_days",this.editFlag)
             },
             {
                 title: "操作",
@@ -107,9 +103,10 @@ class ChildTable extends Component {
 
     // 普通编辑框渲染
     renderColumns = (text, record,index, column,editFlag) =>{
+        let editFlag1 = this.props.btnFlag ? this.props.btnFlag<2 : true;
         return (
             <this.EditableCell
-                editable={editFlag}
+                editable={editFlag1}
                 value={text}
                 onChange={value => this.handleChange(value, index, column)}
             />
@@ -202,6 +199,12 @@ class ChildTable extends Component {
             }
         </div>
     );
+
+    //子表的行点击事件
+    rowclick = (record,index) => {
+        let {grandSonData} = this.props;
+        this.setState({grandSonList : grandSonData[index]})
+    }
 
     handleChangeFloat = (value, index, column)=>{
         const newData = [...this.props.childListdemo_child];
@@ -373,6 +376,7 @@ class ChildTable extends Component {
     }
 
     render() {
+        let { btnFlag } = this.props;
         let childList = [...this.props.childListdemo_child];
         return (
             <div className="child-table">
@@ -388,8 +392,17 @@ class ChildTable extends Component {
                             data={childList}
                             rowKey={r => r.id}
                             columns={this.column}
+                            onRowClick={this.rowclick}
                             scroll={{ x: '100%', y: 520 }}
                         />
+                    </Col>
+                    <Col md={12}>
+                        <div className="master-tag">
+                            <div className="childhead">
+                                <span className="workbreakdown">详情描述</span>
+                            </div>
+                        </div>
+                        <DetailDescTable list={this.state.grandSonList} btnFlag={btnFlag}/>
                     </Col>
                 </Row>
             </div>

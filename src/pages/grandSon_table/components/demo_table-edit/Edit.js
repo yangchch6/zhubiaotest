@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import { actions } from "mirrorx";
 import queryString from 'query-string';
-import { Switch, InputNumber,Loading, Table, Button, Col, Row, Icon, InputGroup, FormControl, Checkbox, Modal, Panel, PanelGroup, Label, Message, Radio } from "tinper-bee";
+import { Switch, InputNumber,Loading, Tabs, Table, Button, Col, Row, Icon, InputGroup, FormControl, Checkbox, Modal, Panel, PanelGroup, Label, Message, Radio } from "tinper-bee";
 import Header from "components/Header";
 import options from "components/RefOption";
 import DatePicker from 'bee-datepicker';
@@ -14,18 +14,23 @@ import 'yyuap-ref/dist2/yyuap-ref.css'//参照样式
 import './edit.less';
 import 'ac-upload/build/ac-upload.css';
 import ChildTabledemo_child from '../demo_child-childtable';
+import Child1Tabledemo_child from '../demo_child1-childtable';
+import Child2Tabledemo_child from '../demo_child2-childtable';
+import Child3Tabledemo_child from '../demo_child3-childtable';
 import { setCookie, getCookie} from "utils";
 
 const FormItem = Form.FormItem;
 const Option = Select.Option;
 const format = "YYYY-MM-DD HH:mm:ss";
+const {TabPane} = Tabs;
 
 class Edit extends Component {
     constructor(props) {
         super(props);
         this.state = {
             rowData: {},
-            fileNameData: props.rowData.attachment || [],//上传附件数据
+            fileNameData: props.rowData.attachment || [],//上传附件数据,
+            btnFlag: 2
         }
     }
     async componentWillMount() {
@@ -40,10 +45,50 @@ class Edit extends Component {
             console.log('rowData',rowData);
             this.setState({
                 rowData:rowData,
+                btnFlag: Number(btnFlag)
             })
         }
 
     }
+
+    //每个子表在保存操作前调用该方法
+    beforeSave = (childListdemo_child,cacheArraydemo_child,delArraydemo_child,grandSonData) => {
+        // 编辑保存但是未修改参照,修改参照字段为参照id数组
+        if(childListdemo_child) {
+            childListdemo_child.map((item,index)=>{
+                        // 判断参照值是否有改动
+                        let uuid = item.uuid,
+                            refArray = [
+                            ],
+                            tempRefIdName =  [
+                            ],
+                            target = cacheArraydemo_child.filter(item=>item.uuid==uuid)[0];
+                // 处理单行多个参照
+                        for (let i=0,len=refArray.length; i<len; i++) {
+                            let tempRef = item[refArray[i]+uuid],
+                                tempShowName = item[tempRefIdName[i]];
+
+                            if(tempRef) {
+
+                                // 参照有改动
+                                item[refArray[i]] = tempRef;
+                            } else if(tempShowName) {
+
+                                // 参照无改动
+                                item[refArray[i]] = target[refArray[i]];
+                            }
+                        }
+                        //判断孙表是否有改动
+                        item['subList'] = grandSonData[index]
+            })
+        }
+        console.log('save childList',childListdemo_child)
+        console.log('save delArray',delArraydemo_child);
+        // 添加删除的数组，删除的数组中dr项的值都为1
+        let resultArray = childListdemo_child.concat(delArraydemo_child);
+        return {resultArray}
+    }
+
     save = () => {//保存
         this.props.form.validateFields(async (err, values) => {
             values.attachment = this.state.fileNameData;
@@ -63,45 +108,26 @@ class Edit extends Component {
                     values.id = rowData.id;
                     values.ts = rowData.ts;
                 }
-                    let {childListdemo_child,cacheArraydemo_child,delArraydemo_child} = this.props;
-                    // 编辑保存但是未修改参照,修改参照字段为参照id数组
-                    if(childListdemo_child) {
-                        childListdemo_child.map((item,index)=>{
-                                    // 判断参照值是否有改动
-                                    let uuid = item.uuid,
-                                        refArray = [
-                                        ],
-                                        tempRefIdName =  [
-                                        ],
-                                        target = cacheArraydemo_child.filter(item=>item.uuid==uuid)[0];
-                            // 处理单行多个参照
-                                    for (let i=0,len=refArray.length; i<len; i++) {
-                                        let tempRef = item[refArray[i]+uuid],
-                                            tempShowName = item[tempRefIdName[i]];
+                    let {childListdemo_child1,cacheArraydemo_child1,delArraydemo_child1,
+                        cacheArraydemo_child2,delArraydemo_child2,childListdemo_child2,
+                        cacheArraydemo_child3,delArraydemo_child3,childListdemo_child3,
+                        grandSonData,grandSonData2,grandSonData3} = this.props;
+                    //子表1：
+                    let { 
+                        resultArray:resultArray1
+                    } = this.beforeSave(childListdemo_child1,cacheArraydemo_child1,delArraydemo_child1)
 
-                                        if(tempRef) {
+                    //子表2
+                    let { 
+                        resultArray:resultArray2 
+                    } = this.beforeSave(childListdemo_child2,cacheArraydemo_child2,delArraydemo_child2,grandSonData2)
 
-                                            // 参照有改动
-                                            item[refArray[i]] = tempRef;
-                                        } else if(tempShowName) {
-
-                                            // 参照无改动
-                                            item[refArray[i]] = target[refArray[i]];
-                                        }
-                                    }
-
-
-                        })
-                    }
-                    console.log('save childList',childListdemo_child)
-                    console.log('save delArray',delArraydemo_child);
-                    // 添加删除的数组，删除的数组中dr项的值都为1
-                    let resultArray = childListdemo_child.concat(delArraydemo_child);
-
+                    //合成提交数据
                     let commitData = {
                         entity : values,
                         sublist:{
-                                demo_childList:resultArray,
+                                demo_childList1:resultArray1,
+                                demo_childList2:resultArray2
                         }
                     };
                     console.log("save values", JSON.stringify(commitData));
@@ -111,11 +137,33 @@ class Edit extends Component {
                 );
                 // 置空缓存数据和删除数组
                 await actions.demo_table.updateState({
+                        //子表1
                         cacheArraydemo_child:[],
                         delArraydemo_child:[],
+                        childListzibiaotest:[],
+                        //子表2
+                        cacheArrayzibiaotest2:[],
+                        delArrayzibiaotest2:[],
+                        childListzibiaotest2:[],
+                        //孙表
+                        grandSonData:[],
+                        grandSonData2:[]
                 })
             }
         });
+    }
+
+    //跳转至编辑页面
+    goEdit = () => {
+        let searchObj = queryString.parse(this.props.location.search);
+        let { search_id } = searchObj;
+        actions.routing.replace(
+            {
+                pathname: 'demo_table-edit',
+                search:`?search_id=${search_id}&btnFlag=1`
+            }
+        )
+        this.setState({ btnFlag : 1 })
     }
 
     // 处理参照回显
@@ -141,9 +189,18 @@ class Edit extends Component {
                     childListdemo_child: [],
                     cacheArrademo_child:[],
                     delArraydemo_child:[],
+                    //子表1
+                    childListdemo_child1: [],
+                    cacheArrademo_child1:[],
+                    delArraydemo_child1:[],
+                    //子表2
                     childListdemo_child2: [],
                     cacheArrademo_child2:[],
                     delArraydemo_child2:[],
+                    //子表3
+                    childListdemo_child3: [],
+                    cacheArrademo_child3:[],
+                    delArraydemo_child3:[],
             })
         window.history.go(-1);
     }
@@ -170,27 +227,57 @@ class Edit extends Component {
     render() {
         const self = this;
 
-        let { btnFlag,appType, id, processDefinitionId, processInstanceId } = queryString.parse(this.props.location.search);
-        btnFlag = Number(btnFlag);
+        let { appType, id, processDefinitionId, processInstanceId } = queryString.parse(this.props.location.search);
+        // btnFlag = Number(btnFlag);
         let {rowData,
+            btnFlag
         } = this.state;
 
         let {
-                cacheArraydemo_child,
-                delArraydemo_child,
-                childListdemo_child,
+            cacheArraydemo_child,
+            delArraydemo_child,
+            childListdemo_child,
+            //子表1
+            cacheArraydemo_child1,
+            delArraydemo_child1,
+            childListdemo_child1,
+            //子表2
+            cacheArraydemo_child2,
+            delArraydemo_child2,
+            childListdemo_child2,
+            //子表3
+            cacheArraydemo_child3,
+            delArraydemo_child3,
+            childListdemo_child3,
+            grandSonData,
+            grandSonData2,
+            grandSonData3
         } = this.props;
 
         let childObj = {
-                cacheArraydemo_child,
-                delArraydemo_child,
-                childListdemo_child
+            cacheArraydemo_child,
+            delArraydemo_child,
+            childListdemo_child,
+            //子表1
+            cacheArraydemo_child1,
+            delArraydemo_child1,
+            childListdemo_child1,
+            //子表2
+            cacheArraydemo_child2,
+            delArraydemo_child2,
+            childListdemo_child2,
+            //子表3
+            cacheArraydemo_child3,
+            delArraydemo_child3,
+            childListdemo_child3,
+            grandSonData,
+            grandSonData2,
+            grandSonData3
         }
 
         let title = this.onChangeHead(btnFlag);
         let { code,name, } = rowData;
         const { getFieldProps, getFieldError } = this.props.form;
-
         return (
             <div className='demo_table-detail'>
                 <Loading
@@ -205,60 +292,40 @@ class Edit extends Component {
                             <Button className='head-save' onClick={this.save}>保存</Button>
                         </div>
                     ) : ''}
-                </Header>
-                <Row className='detail-body'>
-
-                            <Col md={4} xs={6}>
-                                <Label>
-                                    code：
-                                </Label>
-                                    <FormControl disabled={btnFlag == 2||false}
-                                        {
-                                        ...getFieldProps('code', {
-                                            validateTrigger: 'onBlur',
-                                            initialValue: code || '',
-                                            rules: [{
-                                                type:'string',required: true,pattern:/\S+/ig, message: '请输入code',
-                                            }],
-                                        }
-                                        )}
-                                    />
-
-
-                                <span className='error'>
-                                    {getFieldError('code')}
-                                </span>
-                            </Col>
-                            <Col md={4} xs={6}>
-                                <Label>
-                                    name：
-                                </Label>
-                                    <FormControl disabled={btnFlag == 2||false}
-                                        {
-                                        ...getFieldProps('name', {
-                                            validateTrigger: 'onBlur',
-                                            initialValue: name || '',
-                                            rules: [{
-                                                type:'string',required: true,pattern:/\S+/ig, message: '请输入name',
-                                            }],
-                                        }
-                                        )}
-                                    />
-
-
-                                <span className='error'>
-                                    {getFieldError('name')}
-                                </span>
-                            </Col>
-                </Row>
-
-                        <div className="master-tag">
-                            <div className="childhead">
-                                <span className="workbreakdown" >demo子表</span>
-                            </div>
+                    {(btnFlag == 2) ? (
+                        <div className='head-btn'>
+                            <Button colors="primary" onClick={this.goEdit}>编辑</Button>
                         </div>
-                        <ChildTabledemo_child btnFlag={btnFlag} {...childObj}/>
-
+                    ) : ''}
+                </Header>
+                <Row>
+                    <Col md={12}>
+                        <Tabs
+                            defaultActiveKey="1"
+                            tabBarStyle="upborder"
+                            className="demo1-tabs"
+                        >
+                            <TabPane tab='基础数据' key="1">
+                                <Child1Tabledemo_child btnFlag={btnFlag} {...childObj}/>
+                            </TabPane>
+                            <TabPane tab='保洁' key="2">
+                                <Child2Tabledemo_child btnFlag={btnFlag} {...childObj}/>
+                            </TabPane>
+                            <TabPane tab='设施' key="3">
+                                <Child3Tabledemo_child btnFlag={btnFlag} {...childObj}/>
+                            </TabPane>
+                            <TabPane tab='水质' key="4">
+                                {/* <Child2Tabledemo_child btnFlag={btnFlag} {...childObj}/> */}
+                            </TabPane>
+                            <TabPane tab='绿化' key="5">
+                                {/* <Child2Tabledemo_child btnFlag={btnFlag} {...childObj}/> */}
+                            </TabPane>
+                            <TabPane tab='违法违章' key="6">
+                                {/* <Child2Tabledemo_child btnFlag={btnFlag} {...childObj}/> */}
+                            </TabPane>
+                        </Tabs>
+                    </Col>
+                </Row>
             </div>
         )
     }

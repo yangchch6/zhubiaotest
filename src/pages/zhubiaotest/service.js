@@ -3,8 +3,10 @@ import request from "utils/request";
 const URL = {
     "GET_DETAIL":  `${GROBAL_HTTP_CTX}/zhubiaotest/getAssoVo`,
     "SAVE_ORDER":  `${GROBAL_HTTP_CTX}/zhubiaotest/saveAssoVo`,
-    "GET_LIST":  `${GROBAL_HTTP_CTX}/zhubiaotest/list`,
+    // "GET_LIST":  `${GROBAL_HTTP_CTX}/zhubiaotest/list`,
     "DEL_ORDER":  `${GROBAL_HTTP_CTX}/zhubiaotest/deleteBatch`,
+
+    "GET_LIST":`https://mock.yonyoucloud.com/mock/311/demoOrder/zhubiaotest/list`
 
 }
 

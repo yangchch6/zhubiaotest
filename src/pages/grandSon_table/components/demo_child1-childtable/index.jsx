@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { actions ,connect } from "mirrorx";
 import queryString from 'query-string';
 import PaginationTable from 'components/PaginationTable';
+import DetailDescTable from './components/detailDesc-table';
 import options from "components/RefOption";
 import RefWithInput from 'yyuap-ref/dist2/refWithInput';
 import Form from 'bee-form';
-import GrandSonTableTest from '../zibiaotest-suntable';
 import { 
     InputNumber, InputGroup,FormControl, 
     Loading, 
@@ -18,8 +18,7 @@ import {
     Label, 
     Message, 
     Radio,
-    Pagination,
-    FormGroup
+    Pagination
 } from "tinper-bee";
 
 import Select from 'bee-select';
@@ -43,11 +42,7 @@ class ChildTable extends Component {
         this.state = { 
             selectData:[],
             editFlag:true,
-            showModal: false,
-            pk_zhubiao:"",
-            age:"",
-            grandSonList:[]
-            
+            grandSonList:[],
         };
         let {btnFlag} = this.props;
         this.editFlag = btnFlag ? btnFlag<2 : true;
@@ -55,53 +50,50 @@ class ChildTable extends Component {
         
         this.column = [
             {
-                title: "pk_zhubiao",
-                dataIndex: "pkZhubiao",
-                key: "pkZhubiao",
-                width: 150,
-                render: (text, record, index) => this.renderColumns(text, record, index, "pkZhubiao",this.editFlag)
-            },
-            {
-                title: "age",
-                dataIndex: "age",
-                key: "age",
-                width: 150,
-                render: (text, record, index) => this.renderColumns(text, record, index, "age",this.editFlag)
-            },
-            {
-                title: "操作",
-                dataIndex: "d",
-                key: "d",
-                width: 100,
-                render:(text, record, index)=> {
-                    return  (
-                        
-                        <div className='operation-btn'>
-                            {
-                                this.editFlag?<i size='sm' className='uf uf-del del-btn' onClick={() => { this.onChildDel(record, index) }}></i> :text
-                            }
-                        </div>
-                    ) 
-                        
-                    
+                title: "序号",
+                dataIndex: "index",
+                key: "index",
+                width: 50,
+                render(text, record, index){
+                    return index+1
                 }
+            },
+            {
+                title: "河道名称",
+                dataIndex: "riverName",
+                key: "riverName",
+                width: 100,
+                render: (text, record, index) => this.renderColumns(text, record, index, "riverName",this.editFlag)
+            },
+            {
+                title: "问题描述（地点、事项）及整改日期",
+                dataIndex: "description",
+                key: "description",
+                width: 200,
+                render: (text, record, index) => this.renderColumns(text, record, index, "description",this.editFlag)
+            },
+            {
+                title: "养护单位",
+                dataIndex: "maintenanceUnit",
+                key: "maintenanceUnit",
+                width: 100,
+                render: (text, record, index) => this.renderColumns(text, record, index, "maintenanceUnit",this.editFlag)
+            },
+            {
+                title: "备注",
+                dataIndex: "remarks",
+                key: "remarks",
+                width: 100,
+                render: (text, record, index) => this.renderColumns(text, record, index, "remarks",this.editFlag)
             }]
-            this.adjustColumn();
-    }
-
-    // 查看状态下删除操作列
-    adjustColumn = () => {
-        let self = this;
-        if(!self.editFlag) {
-            this.column.pop();
-        }
     }
 
     // 普通编辑框渲染
     renderColumns = (text, record,index, column,editFlag) =>{
+        let editFlag1 = this.props.btnFlag ? this.props.btnFlag<2 : true;
         return (
             <this.EditableCell
-                editable={editFlag}
+                editable={editFlag1}
                 value={text}
                 onChange={value => this.handleChange(value, index, column)}
             />
@@ -117,19 +109,13 @@ class ChildTable extends Component {
         </div>
     )
 
-    //子表的行点击事件
-    rowclick = (record,index) => {
-        let {grandSonData} = this.props;
-        this.setState({grandSonList : grandSonData[index]})
-    }
-
     handleChange = (value, index, column)=>{
-        const newData = [...this.props.childListzibiaotest];
+        const newData = [...this.props.childListdemo_child];
         const target = newData.filter((item,newDataIndex) => index === newDataIndex)[0];
         // debugger
         if (target) {
             target[column] = value;
-            actions.zhubiaotest.updateState({
+            actions.demo_table.updateState({
                 list: newData
             });
         }
@@ -164,11 +150,11 @@ class ChildTable extends Component {
     );
 
     handleChangeNumber = (value, index, column)=>{
-        const newData = [...this.props.childListzibiaotest];
+        const newData = [...this.props.childListdemo_child];
         const target = newData.filter((item,newDataIndex) => index === newDataIndex)[0];
         if (target) {
             target[column] = parseInt(value);
-            actions.zhubiaotest.updateState({
+            actions.demo_table.updateState({
                 list: newData
             });
         }
@@ -201,12 +187,18 @@ class ChildTable extends Component {
         </div>
     );
 
+    //子表的行点击事件
+    // rowclick = (record,index) => {
+    //     let {grandSonData} = this.props;
+    //     this.setState({grandSonList : grandSonData[index]})
+    // }
+
     handleChangeFloat = (value, index, column)=>{
-        const newData = [...this.props.childListzibiaotest];
+        const newData = [...this.props.childListdemo_child];
         const target = newData.filter((item,newDataIndex) => index === newDataIndex)[0];
         if (target) {
             target[column] = value;
-            actions.zhubiaotest.updateState({
+            actions.demo_table.updateState({
                 list: newData
             });
         }
@@ -243,12 +235,12 @@ class ChildTable extends Component {
 
     handleChangeDate = (value, index, column)=> {
         // console.log("date",value.toISOString());
-        const newData = [...this.props.childListzibiaotest];
+        const newData = [...this.props.childListdemo_child];
         const target = newData.filter((item,newDataIndex) => index === newDataIndex)[0];
         if (target) {
             target[column] = value.format(format);
             // console.log("newData date",newData)
-            actions.zhubiaotest.updateState({
+            actions.demo_table.updateState({
                 list: newData
             });
         }
@@ -283,74 +275,32 @@ class ChildTable extends Component {
     )
 
     handleTableSelect = (value, index, column)=> {
-        const newData = [...this.props.childListzibiaotest];
+        const newData = [...this.props.childListdemo_child];
         const target = newData.filter((item,newDataIndex) => index === newDataIndex)[0];
         if (target) {
             console.log("select data",value);
             target[column] = value;
-            actions.zhubiaotest.updateState({
+            actions.demo_table.updateState({
                 list: newData
             });
         }
     }
-    
-    // 增加空行(在表格中编辑)
-    onAddEmptyRowTable = ()=>{
-        let tempArray = [...this.props.childListzibiaotest],
+
+    // 增加空行
+    onAddEmptyRow = ()=>{
+        let tempArray = [...this.props.childListdemo_child],
             emptyRow = {
-                        pkZhubiao:'',
-                        age:'',
+                        code:'',
+                        name:'',
             };
             // UUID用于表示新增数据，在保存数据时需要删掉uuid字段
             // let uuid = this.guid();
             let uuid = setTimeout(function(){},1);
             emptyRow['uuid'] = uuid;
             tempArray.push(emptyRow);
-            actions.zhubiaotest.updateState({childListzibiaotest:tempArray})
+            actions.demo_table.updateState({childListdemo_child:tempArray})
     }
 
-    // 增加空行(在模态框中编辑)
-    onAddEmptyRowModal = ()=>{
-        this.setState({showModal : true})
-    }
-
-    // 模态框点击取消按钮
-    close() {
-        this.setState({
-            showModal: false
-        });
-    }
-
-    // 模态框点击确认按钮
-    saveToTable(){
-        let { pk_zhubiao, age } = this.state;
-        this.setState({ 
-            showModal: false 
-        });
-        let tempArray = [...this.props.childListzibiaotest],
-        emptyRow = {
-                    pkZhubiao:pk_zhubiao,
-                    age:age,
-        };
-        // UUID用于表示新增数据，在保存数据时需要删掉uuid字段
-        // let uuid = this.guid();
-        let uuid = setTimeout(function(){},1);
-        emptyRow['uuid'] = uuid;
-        tempArray.push(emptyRow);
-        actions.zhubiaotest.updateState({childListzibiaotest:tempArray})
-        this.setState({
-            pk_zhubiao:"", 
-            age:""
-        })
-    }
-
-    // 模态框值更改事件
-    handleModalChange = (state) => (value) => {
-        this.setState({
-            [state]: value
-        })
-    }
-    
     // 产生uuid备用
     guid = ()=>{
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -363,11 +313,11 @@ class ChildTable extends Component {
     onChildDel = async (record, index)=>{
 
         console.log("行删除",record,index);
-        let childList = this.deepClone("childListzibiaotest"),
-            cacheArray = this.deepClone("cacheArrayzibiaotest"),
+        let childList = this.deepClone("childListdemo_child"),
+            cacheArray = this.deepClone("cacheArraydemo_child"),
             id = record['id'],
             uuid = record['uuid'],
-            delArray = this.deepClone('delArrayzibiaotest');
+            delArray = this.deepClone('delArraydemo_child');
         
         let childLen = childList.length,
             cacheLen = cacheArray.length;
@@ -392,13 +342,13 @@ class ChildTable extends Component {
         }
         
 
-        console.log("this.props.childListzibiaotest",this.props.childListzibiaotest);
+        console.log("this.props.childListdemo_child",this.props.childListdemo_child);
         console.log("删除后",childList,cacheArray)
         
-        await actions.zhubiaotest.updateState({
-            childListzibiaotest:childList,
-            cacheArrayzibiaotest:cacheArray,
-            delArrayzibiaotest:delArray
+        await actions.demo_table.updateState({
+            childListdemo_child:childList,
+            cacheArraydemo_child:cacheArray,
+            delArraydemo_child:delArray
         })
 
     }
@@ -413,15 +363,13 @@ class ChildTable extends Component {
     }
 
     render() {
-        let childList = [...this.props.childListzibiaotest];
+        let { btnFlag } = this.props;
+        let childList = [...this.props.childListdemo_child1];
         return (
             <div className="child-table">
                 <div className="chidtable-operate-btn">
-                    {this.editFlag ? <Button size='sm' colors="primary" onClick={this.onAddEmptyRowTable}>增行</Button> :"" }
+                    {this.editFlag ? <Button size='sm' colors="primary" onClick={this.onAddEmptyRow}>增行</Button> :"" }
                 </div>
-                {/* <div className="chidtable-operate-btn">
-                    {this.editFlag ? <Button size='sm' colors="primary" onClick={this.onAddEmptyRowModal}>增行(弹框)</Button> :"" }
-                </div> */}
                 <Row className='table-list'>
                     <Col md={12}>
                         <Table
@@ -431,53 +379,19 @@ class ChildTable extends Component {
                             data={childList}
                             rowKey={r => r.id}
                             columns={this.column}
-                            onRowClick={this.rowclick}
+                            // onRowClick={this.rowclick}
                             scroll={{ x: '100%', y: 520 }}
                         />
                     </Col>
-                    <Col md={12}>
-                        <GrandSonTableTest data={this.state.grandSonList} btnFlag={this.props.btnFlag} />
-                    </Col>
-                </Row>
-                <Modal
-                    show={this.state.showModal}
-                    onHide={this.close}
-                    style={{width: 450}}
-                >
-                    <Modal.Header className="text-center">
-                        <Modal.Title>增行</Modal.Title>
-                    </Modal.Header>
-
-                    <Modal.Body>
-                        <div style={{ width: 300, margin: '0 auto' }}>
-                            <FormGroup>
-                                <Label>pk_zhubiao</Label>
-                                <FormControl
-                                    value={this.state.pk_zhubiao}
-                                    onChange={this.handleModalChange('pk_zhubiao')}
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label>age</Label>
-                                <FormControl
-                                    value={this.state.age}
-                                    onChange={this.handleModalChange('age')}
-                                />
-                            </FormGroup>
+                    {/* <Col md={12}>
+                        <div className="master-tag">
+                            <div className="childhead">
+                                <span className="workbreakdown">详情描述</span>
+                            </div>
                         </div>
-
-
-                    </Modal.Body>
-
-                    <Modal.Footer className="text-center">
-                        <Button bordered style={{ marginRight: 20 }} onClick={this.close.bind(this)}>
-                            取消
-                        </Button>
-                        <Button colors="primary" onClick={this.saveToTable.bind(this)}>
-                            确认
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
+                        <DetailDescTable list={this.state.grandSonList} btnFlag={btnFlag}/>
+                    </Col> */}
+                </Row>
             </div>
         );
     }

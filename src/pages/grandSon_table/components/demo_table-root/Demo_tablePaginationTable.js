@@ -19,15 +19,43 @@ export default class Demo_tablePaginationTable extends Component {
             delData:[],
             column:[
                 {
-                    title: "code",
-                    dataIndex: "code",
-                    key: "code",
-                     width:200,
+                    title: "序号",
+                    dataIndex: "index",
+                    key: "index",
+                    width:200,
+                    render(text, record, index) {
+                        return index+1
+                    }
                 },
                 {
-                    title: "name",
-                    dataIndex: "name",
-                    key: "name",
+                    title: "日期",
+                    dataIndex: "date",
+                    key: "date",
+                    width:200,
+                },
+                {
+                    title: "项目名称",
+                    dataIndex: "project_name",
+                    key: "project_name",
+                    width:200,
+                },
+                {
+                    title: "河道名称",
+                    dataIndex: "river_name",
+                    key: "river_name",
+                    width:200,
+                },
+                {
+                    title: "状态",
+                    dataIndex: "status",
+                    key: "status",
+                    width:200,
+                },
+                {
+                    title: "评分",
+                    dataIndex: "score",
+                    key: "score",
+                    width:200,
                 },
                 {
                     title: "操作",

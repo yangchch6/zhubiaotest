@@ -1,10 +1,13 @@
 import request from "utils/request";
 //定义接口地址
 const URL = {
-    "GET_DETAIL":  `${GROBAL_HTTP_CTX}/zhubiaotest/getAssoVo`,
+    // "GET_DETAIL":  `${GROBAL_HTTP_CTX}/zhubiaotest/getAssoVo`,
     "SAVE_ORDER":  `${GROBAL_HTTP_CTX}/zhubiaotest/saveAssoVo`,
-    "GET_LIST":  `${GROBAL_HTTP_CTX}/zhubiaotest/list`,
+    // "GET_LIST":  `${GROBAL_HTTP_CTX}/zhubiaotest/list`,
     "DEL_ORDER":  `${GROBAL_HTTP_CTX}/zhubiaotest/deleteBatch`,
+
+    "GET_DETAIL": `https://mock.yonyoucloud.com/mock/311/demoOrder/zhubiaotest/getAssoVo`,
+    "GET_LIST": `https://mock.yonyoucloud.com/mock/311/demoOrder/zhubiaotest/list`,
 
 }
 

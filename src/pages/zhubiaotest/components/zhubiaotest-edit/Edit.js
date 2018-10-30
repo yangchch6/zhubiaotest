@@ -26,7 +26,8 @@ class Edit extends Component {
         super(props);
         this.state = {
             rowData: {},
-            fileNameData: props.rowData.attachment || [],//上传附件数据
+            fileNameData: props.rowData.attachment || [],//上传附件数据,
+            btnFlag:2
         }
     }
     async componentWillMount() {
@@ -41,6 +42,7 @@ class Edit extends Component {
             console.log('rowData',rowData);
             this.setState({
                 rowData:rowData,
+                btnFlag: Number(btnFlag)
             })
         }
 
@@ -65,7 +67,7 @@ class Edit extends Component {
                     values.ts = rowData.ts;
                 }
                     let {childListzibiaotest,cacheArrayzibiaotest,delArrayzibiaotest,
-                        childListzibiaotest01,cacheArrayzibiaotest01,delArrayzibiaotest01} = this.props;
+                        childListzibiaotest01,cacheArrayzibiaotest01,delArrayzibiaotest01,grandSonData} = this.props;
                     // 编辑保存但是未修改参照,修改参照字段为参照id数组
                     if(childListzibiaotest) {
                         childListzibiaotest.map((item,index)=>{
@@ -91,6 +93,8 @@ class Edit extends Component {
                                             item[refArray[i]] = target[refArray[i]];
                                         }
                                     }
+                                    //判断孙表是否有改动
+                                    item['subList'] = grandSonData[index]
 
 
                         })
@@ -110,7 +114,7 @@ class Edit extends Component {
                     };
                     console.log("save values", JSON.stringify(commitData));
 
-
+                    console.log(commitData)
                 await actions.zhubiaotest.save(
                     commitData,
                 );
@@ -121,10 +125,23 @@ class Edit extends Component {
                         childListzibiaotest:[],
                         cacheArrayzibiaotest01:[],
                         delArrayzibiaotest01:[],
-                        childListzibiaotest01:[]
+                        childListzibiaotest01:[],
+                        grandSonData:[]
                 })
             }
         });
+    }
+
+    edit = () => {
+        let searchObj = queryString.parse(this.props.location.search);
+        let { search_id } = searchObj;
+        actions.routing.replace(
+            {
+                pathname: 'zhubiaotest-edit',
+                search:`?search_id=${search_id}&btnFlag=1`
+            }
+        )
+        this.setState({ btnFlag : 1 })
     }
 
     // 处理参照回显
@@ -179,10 +196,12 @@ class Edit extends Component {
     render() {
         const self = this;
 
-        let { btnFlag,appType, id, processDefinitionId, processInstanceId } = queryString.parse(this.props.location.search);
-        btnFlag = Number(btnFlag);
+        let { appType, id, processDefinitionId, processInstanceId } = queryString.parse(this.props.location.search);
+        // btnFlag = Number(btnFlag);
         let {rowData,
+            btnFlag
         } = this.state;
+        console.log("btnFlag11111111",btnFlag)
 
         let {
                 cacheArrayzibiaotest,
@@ -211,7 +230,6 @@ class Edit extends Component {
         let title = this.onChangeHead(btnFlag);
         let { code,name, } = rowData;
         const { getFieldProps, getFieldError } = this.props.form;
-
         return (
             <div className='zhubiaotest-detail'>
                 <Loading
@@ -227,6 +245,9 @@ class Edit extends Component {
                         </div>
                     ) : ''}
                 </Header>
+                <div className='head-btn'>
+                    <Button className='head-cancel' onClick={this.edit}>编辑</Button>
+                </div>
                 <Row className='detail-body'>
 
                             <Col md={4} xs={6}>
