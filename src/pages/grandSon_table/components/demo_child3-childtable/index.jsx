@@ -70,6 +70,12 @@ class ChildTable extends Component {
                 render: (text, record, index) => this.renderColumns(text, record, index, "expected_days",this.editFlag)
             }]
     }
+
+    componentDidMount(){
+        let { grandSonData3 } = this.props;
+        this.setState({grandSonList : grandSonData3[0]})
+    }
+
     // 查看状态下删除操作列
     adjustColumn = () => {
         let self = this;

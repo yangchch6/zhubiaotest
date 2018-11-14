@@ -156,7 +156,7 @@ export default {
             });
             let {data:{detailMsg}}=await api.getDetail(param);
                     let childData = [...detailMsg.zibiaotestList] ;
-                    let childData01 = [...detailMsg.zibiaotest01List];
+                    let childData01 = [...detailMsg.zibiao1testList];
                     let subList = [];//孙表数据
                     let cacheArrayzibiaotest = [];
                     let tempArrayzibiaotest = [];

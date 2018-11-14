@@ -8,6 +8,8 @@ import options from "components/RefOption";
 import DatePicker from 'bee-datepicker';
 import Form from 'bee-form';
 import Select from 'bee-select';
+import Viewer from 'bee-viewer';
+import 'bee-viewer/build/Viewer.css';
 import RefWithInput from 'yyuap-ref/dist2/refWithInput'
 import moment from "moment";
 import 'yyuap-ref/dist2/yyuap-ref.css'//参照样式
@@ -30,10 +32,22 @@ class Edit extends Component {
         this.state = {
             rowData: {},
             fileNameData: props.rowData.attachment || [],//上传附件数据,
-            btnFlag: 2
+            btnFlag: 2,
+            dismiss:'无',
+            pictureSrc: []
         }
     }
+    loadPic=()=>{
+        window.setTimeout(()=>{
+            this.setState({
+                pictureSrc: [
+                    'http://design.yonyoucloud.com/static/bee.tinper.org-demo/swiper-demo-1-min.jpg'
+                ]
+            })
+        },100)
+    }
     async componentWillMount() {
+        this.loadPic();
         await actions.demo_table.getOrderTypes();
         let searchObj = queryString.parse(this.props.location.search);
         let { btnFlag } = searchObj;
@@ -48,7 +62,6 @@ class Edit extends Component {
                 btnFlag: Number(btnFlag)
             })
         }
-
     }
 
     //每个子表在保存操作前调用该方法
@@ -78,8 +91,10 @@ class Edit extends Component {
                                 item[refArray[i]] = target[refArray[i]];
                             }
                         }
-                        //判断孙表是否有改动
-                        item['subList'] = grandSonData[index]
+                        if(grandSonData){
+                            //判断孙表是否有改动
+                            item['subList'] = grandSonData[index]
+                        }
             })
         }
         console.log('save childList',childListdemo_child)
@@ -151,6 +166,13 @@ class Edit extends Component {
                 })
             }
         });
+    }
+    //驳回原因
+    FormChange = (value) => {
+        console.log(value)
+        this.setState({
+            dismiss:value
+        })
     }
 
     //跳转至编辑页面
@@ -299,11 +321,25 @@ class Edit extends Component {
                     ) : ''}
                 </Header>
                 <Row>
+                    <Col md={4}>
+                        <Label>
+                            图片：
+                        </Label>
+                        <Viewer asyncLoad={true} >
+                            <div>
+                                {this.state.pictureSrc?
+                                    this.state.pictureSrc.map((item,index) => {
+                                        return (<img width="100" key={index} src={item} alt="Picture"/>)
+                                    }) :null
+                                }
+                            </div>
+                        </Viewer>
+                    </Col>
                     <Col md={12}>
                         <Tabs
                             defaultActiveKey="1"
                             tabBarStyle="upborder"
-                            className="demo1-tabs"
+                            className="child-tabs"
                         >
                             <TabPane tab='基础数据' key="1">
                                 <Child1Tabledemo_child btnFlag={btnFlag} {...childObj}/>

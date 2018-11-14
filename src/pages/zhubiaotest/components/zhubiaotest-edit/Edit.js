@@ -10,6 +10,8 @@ import Form from 'bee-form';
 import Select from 'bee-select';
 import RefWithInput from 'yyuap-ref/dist2/refWithInput'
 import moment from "moment";
+import Viewer from 'bee-viewer';
+import 'bee-viewer/build/Viewer.css';
 import 'yyuap-ref/dist2/yyuap-ref.css'//参照样式
 import './edit.less';
 import 'ac-upload/build/ac-upload.css';
@@ -27,7 +29,8 @@ class Edit extends Component {
         this.state = {
             rowData: {},
             fileNameData: props.rowData.attachment || [],//上传附件数据,
-            btnFlag:2
+            btnFlag:2,
+            visible: false,
         }
     }
     async componentWillMount() {
@@ -201,7 +204,16 @@ class Edit extends Component {
         let {rowData,
             btnFlag
         } = this.state;
-        console.log("btnFlag11111111",btnFlag)
+        let { pictureSrc } = rowData;
+        // console.log("pictureSrc:",pictureSrc)
+        // let pictureSrc = "http://design.yonyoucloud.com/static/bee.tinper.org-demo/swiper-demo-1-min.jpg,http://design.yonyoucloud.com/static/bee.tinper.org-demo/swiper-demo-2-min.jpg"
+        
+        // let _img = [];//图片列表
+        // if(pictureSrc){
+        //     pictureSrc.split(",").map((item,index)=>{
+        //         _img.push(<img id="image" key={index} src={item} alt="Picture"/>);
+        //     })
+        // }
 
         let {
                 cacheArrayzibiaotest,
@@ -292,8 +304,22 @@ class Edit extends Component {
                                     {getFieldError('name')}
                                 </span>
                             </Col>
-                </Row>
+                            <Col md={12} xs={6} className="imgContainer">
+                                <Label>
+                                    图片：
+                                </Label>
+                                <Viewer asyncLoad={true}>
+                                    <div>
+                                        {pictureSrc?
+                                            pictureSrc.split(",").map((item,index)=>{
+                                                if(item != '')
+                                                return <img id="image" key={index} src={item} alt="Picture"/>
+                                        }):null}
+                                    </div>
+                                </Viewer>
 
+                            </Col>
+                </Row>
                         <div className="master-tag">
                             <div className="childhead">
                                 <span className="workbreakdown" >子表1</span>

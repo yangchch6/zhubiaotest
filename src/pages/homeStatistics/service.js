@@ -1,22 +1,21 @@
 import request from "utils/request";
 //定义接口地址
 const URL = {
-    "GET_DETAIL":  `${GROBAL_HTTP_CTX}/zhubiaotest/getAssoVo`,
-    "SAVE_ORDER":  `${GROBAL_HTTP_CTX}/zhubiaotest/saveAssoVo`,
-    // "GET_LIST":  `${GROBAL_HTTP_CTX}/zhubiaotest/list`,
-    "DEL_ORDER":  `${GROBAL_HTTP_CTX}/zhubiaotest/deleteBatch`,
+    "GET_DETAIL":  `${GROBAL_HTTP_CTX}/example_helloworld/list`,
+    "SAVE_ORDER":  `${GROBAL_HTTP_CTX}/example_helloworld/save`,
+    "GET_LIST":  `${GROBAL_HTTP_CTX}/example_helloworld/list`,    
+    "DEL_ORDER":  `${GROBAL_HTTP_CTX}/example_helloworld/deleteBatch`,
 
-    "GET_LIST":`https://mock.yonyoucloud.com/mock/311/demoOrder/zhubiaotest/list`,
-    "GET_DETAIL":`https://mock.yonyoucloud.com/mock/311/demoOrder/zhubiaotest/getAssoVo`
-
+    "GET_DAY_TODO_LIST": `https://mock.yonyoucloud.com/mock/356/hzlq/dayTodo`,
+    "GET_MONTH_TODO_LIST":`https://mock.yonyoucloud.com/mock/356/hzlq/monthTodo`
 }
 
 /**
- * 获取列表
+ * 获取未完成表格数量列表（按天查）
  * @param {*} params
  */
-export const getList = (params) => {
-    let url =URL.GET_LIST+'?1=1';
+export const getDayTodoList = (params) => {
+    let url =URL.GET_DAY_TODO_LIST;
     for(let attr in params){
         if((attr!='pageIndex')&&(attr!='pageSize')){
             url+='&search_'+attr+'='+params[attr];
@@ -25,6 +24,28 @@ export const getList = (params) => {
         }
     }
     return request(url, {
+        method: "get",
+        data: params
+    });
+}
+
+/**
+ * 获取未完成表格数量列表 （按月查）
+ * @param {*} params
+ */
+export const getMonthTodoList = (params) => {
+    return request(URL.GET_MONTH_TODO_LIST, {
+        method: "get",
+        data: params
+    });
+}
+
+/**
+ * 获取列表
+ * @param {*} params
+ */
+export const getList = (params) => {
+    return request(URL.GET_DAY_TODO_LIST, {
         method: "get",
         data: params
     });
@@ -57,13 +78,13 @@ export const saveList = (params) => {
         data:params
     });
 }
-export const saveZhubiaotest = (params) => {
+export const saveExampleHelloworld = (params) => {
     return request(URL.SAVE_ORDER, {
         method: "post",
         data: params
     });
 }
-export const delZhubiaotest = (params) => {
+export const delExampleHelloworld = (params) => {
     return request(URL.DEL_ORDER, {
         method: "post",
         data: params

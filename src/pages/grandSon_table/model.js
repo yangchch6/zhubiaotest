@@ -234,8 +234,10 @@ export default {
             await actions.demo_table.updateState({
                 childListdemo_child1:tempArraydemo_child1,
                 cacheArraydemo_child1:cacheArraydemo_child1,
+
                 childListdemo_child2:tempArraydemo_child2,
                 cacheArraydemo_child2:cacheArraydemo_child2,
+                
                 childListdemo_child3:tempArraydemo_child3,
                 cacheArraydemo_child3:cacheArraydemo_child3,
                 // grandSonData:subList,

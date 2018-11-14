@@ -39,11 +39,11 @@ export default class ZhubiaotestPaginationTable extends Component {
                     render(text, record, index){
                         let photoTemp = record.photo;
                         return (
-                            <Viewer shown={self.shown} hidden={self.hidden}>
+                            <Viewer>
                                 <div>
                                     {photoTemp?
                                         photoTemp.map((item,index) => {
-                                            return (<img id="image" key={index} src={item} alt="Picture"/>)
+                                            return (<img key={index} src={item} alt="Picture"/>)
                                         }) :null
                                     }
                                 </div>

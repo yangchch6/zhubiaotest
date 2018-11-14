@@ -65,6 +65,22 @@ class ChildTable extends Component {
             }]
             // this.adjustColumn();
     }
+
+    // 组件第一次挂载完成
+    componentDidMount(){
+        console.log(this.props,"0000")
+        let { grandSonData2 } = this.props;
+        this.setState({grandSonList : grandSonData2[0]})
+    }
+
+    // 组件接受新的props时
+    componentWillReceiveProps(nextProps){
+        console.log(nextProps.grandSonData2,this.props.grandSonData2);
+        if(nextProps.grandSonData2 != this.props.grandSonData2){
+            this.setState({grandSonList : nextProps.grandSonData2[0]})
+        }
+    }
+
     // 查看状态下删除操作列
     adjustColumn = () => {
         let self = this;

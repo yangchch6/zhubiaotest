@@ -57,21 +57,20 @@ class DetailDescTable extends Component{
                         list.map((item,index) => {
                             return (
                                 <Col md={3} key={index}>
-                                    <Panel  style={{ marginTop: 40 }} 
-                                            header={<FormItem>
-                                                        <Label>详情描述：</Label>
-                                                        <FormControl 
-                                                            disabled={btnFlag == 2||false} 
-                                                            value={item.desc}
-                                                            onChange={this.handleFormChange("desc",index)}
-                                                        />
-                                                    </FormItem>} 
-                                    >
+                                    <Panel  style={{ marginTop: 40 }}>
+                                        <FormItem>
+                                            <Label>详情描述：</Label> 
+                                            <FormControl 
+                                                disabled={btnFlag == 2||false} 
+                                                value={item.desc || ''}
+                                                onChange={this.handleFormChange("desc",index)}
+                                            />
+                                        </FormItem>
                                         <FormItem>
                                             <Label>code：</Label>
                                             <FormControl 
                                                 disabled={btnFlag == 2||false} 
-                                                value={item.code}
+                                                value={item.code || ''}
                                                 onChange={this.handleFormChange("code",index)}
                                             />
                                         </FormItem>
